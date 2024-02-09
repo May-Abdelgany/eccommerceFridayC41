@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { fileUpload, fileValidation } from "../../utils/multer.js";
 import validation from "../../middleware/validation.js";
-import subCategoryEndPoints from "./subCategory.endPoint.js";
+import subCategoryEndPoints from "./subcategory.endPoint.js";
 import auth from "../../middleware/auth.js";
 
 import * as subCategoryController from "./controller/subCategory.controller.js";
