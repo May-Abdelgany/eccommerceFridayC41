@@ -2,6 +2,8 @@ import cartModel from "../../../../DB/model/Cart.model.js";
 import couponModel from "../../../../DB/model/Coupon.model.js";
 import orderModel from "../../../../DB/model/Order.model.js";
 import productModel from "../../../../DB/model/Product.model.js";
+import createInvoice from "../../../utils/createPdf/createPdf.js";
+import sendEmail from "../../../utils/email.js";
 import { asyncHandler } from "../../../utils/errorHandling.js";
 
 //1-check if coupon
@@ -82,6 +84,32 @@ export const createOrder = asyncHandler(async (req, res, next) => {
   }
 
   const order = await orderModel.create(req.body);
+  const invoice = {
+    shipping: {
+      name: req.user.userName,
+      address: order.address,
+      city: "San Francisco",
+      state: "CA",
+      country: "US",
+      postal_code: 94111,
+    },
+    items: order.products,
+    subtotal: order.totalPrice,
+    paid: 0,
+    date: order.createdAt,
+    invoice_nr: order._id.toString(),
+  };
+  createInvoice(invoice, "invoice.pdf");
+  await sendEmail({
+    to: req.user.email,
+    subject: "invoice",
+    attachments: [
+      {
+        path: "invoice.pdf",
+        type: "application/pdf",
+      },
+    ],
+  });
   return res.json({ message: "done", order });
 });
 
