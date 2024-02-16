@@ -1,7 +1,7 @@
 // const fs = require("fs");
 // const PDFDocument = require("pdfkit");
 import fs from "fs";
-import PDFDocument from "pdfKit";
+import PDFDocument from "pdfkit";
 function createInvoice(invoice, path) {
   let doc = new PDFDocument({ size: "A4", margin: 50 });
 
