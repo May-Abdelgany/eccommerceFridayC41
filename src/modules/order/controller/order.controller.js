@@ -2,9 +2,10 @@ import cartModel from "../../../../DB/model/Cart.model.js";
 import couponModel from "../../../../DB/model/Coupon.model.js";
 import orderModel from "../../../../DB/model/Order.model.js";
 import productModel from "../../../../DB/model/Product.model.js";
-import createInvoice from "../../../utils/createPdf/createPdf.js";
+import createInvoice from "../../../utils/createPdf.js";
 import sendEmail from "../../../utils/email.js";
 import { asyncHandler } from "../../../utils/errorHandling.js";
+import payment from "../../../utils/payment.js";
 
 //1-check if coupon
 //2-send products
@@ -99,17 +100,40 @@ export const createOrder = asyncHandler(async (req, res, next) => {
     date: order.createdAt,
     invoice_nr: order._id.toString(),
   };
-  createInvoice(invoice, "invoice.pdf");
-  await sendEmail({
-    to: req.user.email,
-    subject: "invoice",
-    attachments: [
-      {
-        path: "invoice.pdf",
-        type: "application/pdf",
-      },
-    ],
-  });
+  // createInvoice(invoice, "invoice.pdf");
+  // await sendEmail({
+  //   to: req.user.email,
+  //   subject: "invoice",
+  //   attachments: [
+  //     {
+  //       path: "invoice.pdf",
+  //       type: "application/pdf",
+  //     },
+  //   ],
+  // });
+
+  //payment method card
+  if (order.paymentType == "card") {
+    const session = payment({
+      success_url: `${process.env.SUCCESS_URL}/${order._id}`,
+      cancel_url: `${process.env.CANCEL_URL}/${order._id}`,
+      customer_email: req.user.email,
+      line_items: order.products.map((element) => {
+        return {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: element.name,
+            },
+            unit_amount: element.unitPrice * 100,
+          },
+          quantity: element.quantity,
+        };
+      }),
+    });
+    return res.json({ message: "done", order, session });
+  }
+
   return res.json({ message: "done", order });
 });
 

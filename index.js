@@ -4,7 +4,6 @@ dotenv.config({ path: path.resolve("./config/.env") });
 import express from "express";
 
 import initApp from "./src/index.router.js";
-import createInvoice from "./src/utils/createPdf/createPdf.js";
 const app = express();
 
 // setup port and the baseUrl
