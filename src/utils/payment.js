@@ -1,16 +1,18 @@
 import Stripe from "stripe";
-function payment({
-  stripe = new Stripe(process.env.API_KEY_PAYMENT),
-  payment_method_types = "card",
+async function payment({
+  payment_method_types = ["card"],
   mode = "payment",
   success_url = process.env.SUCCESS_URL,
   cancel_url = process.env.CANCEL_URL,
   discounts = [],
   customer_email,
-  line_items: [],
+  line_items = [],
+  metadata = {},
 } = {}) {
-  const session = stripe.checkout.sessions.create({
+  const stripe = new Stripe(process.env.API_KEY_PAYMENT);
+  const session = await stripe.checkout.sessions.create({
     payment_method_types,
+    metadata,
     mode,
     success_url,
     cancel_url,

@@ -20,7 +20,7 @@ const couponSchema = new Schema({
     createdBy: {
         type: Types.ObjectId,
         ref: 'User',
-        required: [true, 'userId is required']   //replace to true
+        required: [false, 'userId is required']   //replace to true
     },
     usedBy: [{
         type: Types.ObjectId,

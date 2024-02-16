@@ -1,3 +1,4 @@
+import Stripe from "stripe";
 import cartModel from "../../../../DB/model/Cart.model.js";
 import couponModel from "../../../../DB/model/Coupon.model.js";
 import orderModel from "../../../../DB/model/Order.model.js";
@@ -114,7 +115,20 @@ export const createOrder = asyncHandler(async (req, res, next) => {
 
   //payment method card
   if (order.paymentType == "card") {
-    const session = payment({
+    const stripe = new Stripe(process.env.API_KEY_PAYMENT);
+    let couponStripe;
+    if (couponName) {
+      couponStripe = await stripe.coupons.create({
+        percent_off: amount,
+        duration: "once",
+      });
+    }
+
+    const session = await payment({
+      metadata: {
+        orderId: order._id.toString(),
+      },
+      discounts: amount ? [{ coupon: couponStripe.id }] : [],
       success_url: `${process.env.SUCCESS_URL}/${order._id}`,
       cancel_url: `${process.env.CANCEL_URL}/${order._id}`,
       customer_email: req.user.email,
