@@ -1,4 +1,4 @@
-import { Router } from "express";
+import express,{ Router } from "express";
 import * as orderController from './controller/order.controller.js'
 import * as orderValidation from './order.validation.js'
 
@@ -31,5 +31,16 @@ router.put('/deliverdOrder/:orderId',
     auth(orderEndPoints.deliverdOrder),
     orderController.deliverdOrder
 )
+
+
+
+
+
+
+
+
+
+router.post('/webhook', express.raw({type: 'application/json'}), orderController.webHook);
+
 
 export default router
