@@ -1,57 +1,63 @@
 import mongoose, { Schema, model } from "mongoose";
 
-
-const userSchema = new Schema({
+const userSchema = new Schema(
+  {
     userName: {
-        type: String,
-        required: [true, 'userName is required'],
-        min: [2, 'minimum length 2 char'],
-        max: [20, 'max length 2 char']
+      type: String,
+      required: [true, "userName is required"],
+      min: [2, "minimum length 2 char"],
+      max: [20, "max length 2 char"],
     },
     email: {
-        type: String,
-        unique: [true, 'email must be unique value'],
-        required: [true, 'userName is required'],
+      type: String,
+      unique: [true, "email must be unique value"],
+      required: [true, "userName is required"],
     },
     password: {
-        type: String,
-        required: [true, 'password is required'],
+      type: String,
+      required: [true, "password is required"],
     },
     phone: {
-        type: String,
+      type: String,
     },
     role: {
-        type: String,
-        default: 'Admin',
-        enum: ['User', 'Admin']
+      type: String,
+      default: "Admin",
+      enum: ["User", "Admin"],
     },
     confirmEmail: {
-        type: Boolean,
-        default: false,
+      type: Boolean,
+      default: false,
     },
     isDeleted: {
-        type: Boolean,
-        default: false,
+      type: Boolean,
+      default: false,
     },
     status: {
-        type: String,
-        default: 'Offline',
-        enum: ['Offline', 'Online']
+      type: String,
+      default: "Offline",
+      enum: ["Offline", "Online"],
     },
     gender: {
-        type: String,
-        default: 'Female',
-        enum: ['Male', 'Female']
+      type: String,
+      default: "Female",
+      enum: ["Male", "Female"],
     },
     address: String,
-    image: String,
+    image: Object,
     DOB: String,
-    code: String
+    code: String,
+    provider: {
+      type: String,
+      enum: ["System", "Google"],
+      default: "System",
+    },
     // wishList:[]
-}, {
-    timestamps: true
-})
+  },
+  {
+    timestamps: true,
+  }
+);
 
-
-const userModel = mongoose.model.User || model('User', userSchema)
-export default userModel
+const userModel = mongoose.model.User || model("User", userSchema);
+export default userModel;

@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 async function payment({
-  payment_method_types = ["card"],
+  payment_method_types = [""],
   mode = "payment",
   success_url = process.env.SUCCESS_URL,
   cancel_url = process.env.CANCEL_URL,

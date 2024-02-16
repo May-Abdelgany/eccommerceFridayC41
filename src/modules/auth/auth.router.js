@@ -33,4 +33,5 @@ router.post(
         validation(authValidation.fogetPasswordSchema),
         authController.forgetPassword
     )
+    .post('/loginWithGmail',authController.loginWithGmail)
 export default router
